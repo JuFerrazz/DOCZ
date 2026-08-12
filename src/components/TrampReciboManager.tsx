@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { TrampRecibo } from './TrampRecibo';
 
 interface TrampEntry {
@@ -31,6 +32,9 @@ export function TrampReciboManager({ variant = 'tramp' }: TrampReciboManagerProp
   const [voy, setVoy] = useState('');
   const [vessel, setVessel] = useState('');
   const [port, setPort] = useState('');
+  const [vesselPrefix, setVesselPrefix] = useState<'MV' | 'MT'>('MV');
+  const [operation, setOperation] = useState<'embarque' | 'desembarque'>('embarque');
+  const [partyType, setPartyType] = useState<'SHIPPER' | 'CONSIGNEE'>('SHIPPER');
   const [entries, setEntries] = useState<TrampEntry[]>([
     { id: 1, blNumber: '', shipper: '' }
   ]);
@@ -75,6 +79,9 @@ export function TrampReciboManager({ variant = 'tramp' }: TrampReciboManagerProp
     setVoy('');
     setVessel('');
     setPort('');
+    setVesselPrefix('MV');
+    setOperation('embarque');
+    setPartyType('SHIPPER');
     setEntries([{ id: 1, blNumber: '', shipper: '' }]);
     setShowPreview(false);
     setCurrentIndex(0);
@@ -134,7 +141,16 @@ export function TrampReciboManager({ variant = 'tramp' }: TrampReciboManagerProp
                 <Ship className="w-4 h-4" />
                 Navio
               </Label>
-              <Input value={vessel} onChange={(e) => setVessel(e.target.value)} placeholder="Nome do navio" />
+              <div className="flex gap-2">
+                <Select value={vesselPrefix} onValueChange={(v) => setVesselPrefix(v as 'MV' | 'MT')}>
+                  <SelectTrigger className="w-24"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="MV">MV</SelectItem>
+                    <SelectItem value="MT">MT</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input value={vessel} onChange={(e) => setVessel(e.target.value)} placeholder="Nome do navio" />
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -142,19 +158,41 @@ export function TrampReciboManager({ variant = 'tramp' }: TrampReciboManagerProp
                 <MapPin className="w-4 h-4" />
                 Porto
               </Label>
-              <Input value={port} onChange={(e) => setPort(e.target.value)} placeholder="Porto de embarque" />
+              <div className="flex gap-2">
+                <Select value={operation} onValueChange={(v) => setOperation(v as 'embarque' | 'desembarque')}>
+                  <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="embarque">Embarque</SelectItem>
+                    <SelectItem value="desembarque">Desembarque</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input value={port} onChange={(e) => setPort(e.target.value)} placeholder="Porto" />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Tipo de parte</Label>
+              <Select value={partyType} onValueChange={(v) => setPartyType(v as 'SHIPPER' | 'CONSIGNEE')}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="SHIPPER">Shipper</SelectItem>
+                  <SelectItem value="CONSIGNEE">Consignee</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
           <div className="space-y-3">
-            <Label>Entradas (BL, Shipper)</Label>
+            <Label>Entradas (BL, {partyType === 'CONSIGNEE' ? 'Consignee' : 'Shipper'})</Label>
             {entries.map((entry) => (
               <div key={entry.id} className="grid grid-cols-12 gap-2 items-center">
                 <div className="col-span-4">
                   <Input value={entry.blNumber} onChange={(e) => handleEntryChange(entry.id, 'blNumber', e.target.value)} placeholder="BL #" />
                 </div>
                 <div className="col-span-7">
-                  <Input value={entry.shipper} onChange={(e) => handleEntryChange(entry.id, 'shipper', e.target.value)} placeholder="Nome do Shipper" />
+                  <Input value={entry.shipper} onChange={(e) => handleEntryChange(entry.id, 'shipper', e.target.value)} placeholder={partyType === 'CONSIGNEE' ? 'Nome do Consignee' : 'Nome do Shipper'} />
                 </div>
                 <div className="col-span-1">
                   {entries.length > 1 && (
@@ -206,6 +244,9 @@ export function TrampReciboManager({ variant = 'tramp' }: TrampReciboManagerProp
                     shipper={recibos[currentIndex].shipper}
                     blNumbers={recibos[currentIndex].blNumbers}
                     variant={variant}
+                    vesselPrefix={vesselPrefix}
+                    operation={operation}
+                    partyType={partyType}
                   />
                 </div>
                 <div className="flex justify-center mt-4">
@@ -232,6 +273,9 @@ export function TrampReciboManager({ variant = 'tramp' }: TrampReciboManagerProp
                 shipper={recibo.shipper}
                 blNumbers={recibo.blNumbers}
                 variant={variant}
+                vesselPrefix={vesselPrefix}
+                operation={operation}
+                partyType={partyType}
               />
             </div>
           ))}
