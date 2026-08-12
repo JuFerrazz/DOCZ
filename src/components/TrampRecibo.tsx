@@ -10,6 +10,9 @@ interface TrampReciboProps {
   shipper: string;
   blNumbers: string[];
   variant?: 'tramp' | 'g2';
+  vesselPrefix?: 'MV' | 'MT';
+  operation?: 'embarque' | 'desembarque';
+  partyType?: 'SHIPPER' | 'CONSIGNEE';
 }
 
 export const TrampRecibo = forwardRef<HTMLDivElement, TrampReciboProps>(({
@@ -20,6 +23,9 @@ export const TrampRecibo = forwardRef<HTMLDivElement, TrampReciboProps>(({
   shipper,
   blNumbers,
   variant = 'tramp',
+  vesselPrefix = 'MV',
+  operation = 'embarque',
+  partyType = 'SHIPPER',
 }, ref) => {
   const formatBlNumbers = (numbers: string[]) => {
     if (numbers.length === 1) return numbers[0];
