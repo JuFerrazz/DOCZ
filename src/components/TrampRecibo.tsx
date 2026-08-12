@@ -10,6 +10,9 @@ interface TrampReciboProps {
   shipper: string;
   blNumbers: string[];
   variant?: 'tramp' | 'g2';
+  vesselPrefix?: 'MV' | 'MT';
+  operation?: 'embarque' | 'desembarque';
+  partyType?: 'SHIPPER' | 'CONSIGNEE';
 }
 
 export const TrampRecibo = forwardRef<HTMLDivElement, TrampReciboProps>(({
@@ -20,6 +23,9 @@ export const TrampRecibo = forwardRef<HTMLDivElement, TrampReciboProps>(({
   shipper,
   blNumbers,
   variant = 'tramp',
+  vesselPrefix = 'MV',
+  operation = 'embarque',
+  partyType = 'SHIPPER',
 }, ref) => {
   const formatBlNumbers = (numbers: string[]) => {
     if (numbers.length === 1) return numbers[0];
@@ -61,8 +67,8 @@ export const TrampRecibo = forwardRef<HTMLDivElement, TrampReciboProps>(({
         <h1 className="text-center text-2xl font-bold my-8">RECIBO</h1>
 
         <p className="mb-8 text-justify text-[12pt] leading-relaxed">
-          Recebi de ROCHAMAR AGÊNCIA MARÍTIMA S.A., 1ª/2ª/3ª vias Originais e 5 cópias não negociáveis,
-          dos Bs/L abaixo relacionados, referente ao <span className="font-bold">MV {vessel} {voyLabel}</span>, com embarque no
+          Recebi de ROCHAMAR AGÊNCIA MARÍTIMA S.A., 1ª/2ª/3ª vias Originais e 3 cópias não negociáveis,
+          dos Bs/L abaixo relacionados, referente ao <span className="font-bold">{vesselPrefix} {vessel} {voyLabel}</span>, com {operation} no
           porto de <span className="font-bold">{port}</span>.
         </p>
 
@@ -70,7 +76,7 @@ export const TrampRecibo = forwardRef<HTMLDivElement, TrampReciboProps>(({
           <thead>
             <tr className="border-b-2 border-black">
               <th className="text-left py-3 font-bold text-[10pt]">B/L nbr</th>
-              <th className="text-left py-3 font-bold text-[10pt]">SHIPPER</th>
+              <th className="text-left py-3 font-bold text-[10pt]">{partyType}</th>
             </tr>
           </thead>
           <tbody>
