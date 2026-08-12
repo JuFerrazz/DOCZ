@@ -76,7 +76,7 @@ export const TrampRecibo = forwardRef<HTMLDivElement, TrampReciboProps>(({
           <thead>
             <tr className="border-b-2 border-black">
               <th className="text-left py-3 font-bold text-[10pt]">B/L nbr</th>
-              <th className="text-left py-3 font-bold text-[10pt]">SHIPPER</th>
+              <th className="text-left py-3 font-bold text-[10pt]">{partyType}</th>
             </tr>
           </thead>
           <tbody>
