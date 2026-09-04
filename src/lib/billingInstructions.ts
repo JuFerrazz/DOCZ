@@ -36,22 +36,6 @@ export const BILLING_INSTRUCTIONS: BillingInstruction[] = [
     overrideCompanyName: 'RAX BRASIL ASSESSORIA EM COMERCIO EXTERIOR LTDA',
   },
   {
-    shipper: 'RAIZEN ENERGIA',
-    aliases: ['RAIZEN ARARAQUARA', 'RAIZEN PARAGUAÇU LTDA', 'RAIZEN CENTRO SUL', 'RAIZEN CENTRO SUL PAULISTA'],
-    email: 'exportacao.granel@raxbrasil.com.br',
-    remarks: 'Faturar sempre para RAX BRASIL ASSESSORIA EM COMERCIO EXTERIOR LTDA - 17.343.028/0001-24',
-    overrideCNPJ: '17.343.028/0001-24',
-    overrideCompanyName: 'RAX BRASIL ASSESSORIA EM COMERCIO EXTERIOR LTDA',
-  },
-  {
-    shipper: 'RAIZEN CAARAPO ACUCAR E ALCOOL LTDA',
-    aliases: ['RAIZEN CAARAPO'],
-    email: 'exportacao.granel@raxbrasil.com.br',
-    remarks: 'Faturar sempre para RAX BRASIL ASSESSORIA EM COMERCIO EXTERIOR LTDA - 17.343.028/0001-24',
-    overrideCNPJ: '17.343.028/0001-24',
-    overrideCompanyName: 'RAX BRASIL ASSESSORIA EM COMERCIO EXTERIOR LTDA',
-  },
-  {
     shipper: 'SUCDEN',
     email: 'nfserv@sucden.com.br',
     additionalEmails: ['rtalarini@sucden.com', 'exeraw.br@sucden.com', 'exelog@sucden.com'],
@@ -154,18 +138,7 @@ export const BILLING_INSTRUCTIONS: BillingInstruction[] = [
 // Função para buscar instrução por nome do shipper
 export function findBillingInstruction(shipperName: string): BillingInstruction | undefined {
   const normalizedName = shipperName.toUpperCase().trim();
-  
-  // Regra especial para RAIZEN - qualquer shipper que comece com RAIZEN
-  if (normalizedName.startsWith('RAIZEN')) {
-    return {
-      shipper: 'RAIZEN',
-      email: 'exportacao.granel@raxbrasil.com.br',
-      remarks: 'Faturar sempre para RAX BRASIL ASSESSORIA EM COMERCIO EXTERIOR LTDA - 17.343.028/0001-24',
-      overrideCNPJ: '17.343.028/0001-24',
-      overrideCompanyName: 'RAX BRASIL - ASSESSORIA EM COMÉRCIO EXTERIOR LTDA',
-    };
-  }
-  
+
   return BILLING_INSTRUCTIONS.find(instruction => {
     // Verifica o nome principal
     if (normalizedName.includes(instruction.shipper.toUpperCase())) {
