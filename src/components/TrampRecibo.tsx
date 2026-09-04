@@ -1,9 +1,7 @@
 import { forwardRef } from 'react';
 import rochamarLogo from '@/assets/rochamar-new-logo.jpg';
 import sagresLogo from '@/assets/sagres-logo.png';
-import g2WatermarkAsset from '@/assets/g2-watermark.png.asset.json';
-
-const g2Watermark = (g2WatermarkAsset as { url: string }).url;
+import g2Watermark from '@/assets/g2-watermark.png';
 
 interface TrampReciboProps {
   date: string;
