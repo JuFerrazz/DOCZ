@@ -1,6 +1,9 @@
 import { forwardRef } from 'react';
 import rochamarLogo from '@/assets/rochamar-new-logo.jpg';
 import sagresLogo from '@/assets/sagres-logo.png';
+import g2WatermarkAsset from '@/assets/g2-watermark.png.asset.json';
+
+const g2Watermark = (g2WatermarkAsset as { url: string }).url;
 
 interface TrampReciboProps {
   date: string;
@@ -37,6 +40,7 @@ export const TrampRecibo = forwardRef<HTMLDivElement, TrampReciboProps>(({
 
   const headerLogo = variant === 'g2' ? sagresLogo : rochamarLogo;
   const headerAlt = variant === 'g2' ? 'Sagres Agenciamentos Marítimos' : 'Rochamar';
+  const issuerName = variant === 'g2' ? 'SAGRES AGENCIAMENTOS MARÍTIMOS' : 'ROCHAMAR AGÊNCIA MARÍTIMA S.A.';
 
   // VOY -> "V.{number}" displayed in BL line
   const voyLabel = voy ? `V.${voy}` : '';
@@ -44,14 +48,22 @@ export const TrampRecibo = forwardRef<HTMLDivElement, TrampReciboProps>(({
   return (
     <div
       ref={ref}
-      className="bg-white p-6 max-w-[210mm] mx-auto min-h-screen flex flex-col justify-between"
+      className="bg-white p-6 max-w-[210mm] mx-auto min-h-screen flex flex-col justify-between relative overflow-hidden"
       style={{
         fontFamily: "'Century Gothic', 'CenturyGothic', 'AppleGothic', sans-serif",
         fontSize: '10pt',
         lineHeight: '1.4'
       }}
     >
-      <div className="flex-1">
+      {variant === 'g2' && (
+        <img
+          src={g2Watermark}
+          alt=""
+          aria-hidden
+          className="pointer-events-none select-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] opacity-10 print:opacity-[0.08] z-0"
+        />
+      )}
+      <div className="flex-1 relative z-10">
         {/* Header: logo on the left */}
         <div className="flex justify-between items-start mb-6">
           <img
@@ -67,7 +79,7 @@ export const TrampRecibo = forwardRef<HTMLDivElement, TrampReciboProps>(({
         <h1 className="text-center text-2xl font-bold my-8">RECIBO</h1>
 
         <p className="mb-8 text-justify text-[12pt] leading-relaxed">
-          Recebi de ROCHAMAR AGÊNCIA MARÍTIMA S.A., 1ª/2ª/3ª vias Originais e 3 cópias não negociáveis,
+          Recebi de {issuerName}, 1ª/2ª/3ª vias Originais e 3 cópias não negociáveis,
           dos Bs/L abaixo relacionados, referente ao <span className="font-bold">{vesselPrefix} {vessel} {voyLabel}</span>, com {operation} no
           porto de <span className="font-bold">{port}</span>.
         </p>
@@ -88,7 +100,7 @@ export const TrampRecibo = forwardRef<HTMLDivElement, TrampReciboProps>(({
         </table>
       </div>
 
-      <div className="space-y-6 text-[10pt]">
+      <div className="space-y-6 text-[10pt] relative z-10">
         <div className="grid grid-cols-1 gap-4">
           <div>
             <span>Empresa: </span>
